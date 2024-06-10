@@ -37,3 +37,5 @@
 ## 14 GET /api/users -> isAdmin -> getAllUsers -> searchByName + pagination functionality
 
 ## 15 responseHandler controller for error of success
+
+## 16 GET /api/users/:id -> Find a single user by id

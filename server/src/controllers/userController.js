@@ -1,6 +1,7 @@
 const userModel = require('../models/userModel');
 const createError = require('http-errors');
 const {successResponse} = require('./responseController');
+const mongoose = require('mongoose');
 
 const getUser = async (req, res, next) => {
     try {
@@ -50,4 +51,24 @@ const getUser = async (req, res, next) => {
     }
 };
 
-module.exports = getUser;
+const getUserId = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const user = await userModel.findById(id, {password: 0});
+
+        if (!user) throw createError(404, 'user does not match with this id');
+
+        return successResponse(res, {
+            payload: {
+                user,
+            },
+        });
+    } catch (error) {
+        if (error instanceof mongoose.Error) {
+            next(createError(400, 'Invalid user'));
+        }
+        next(error);
+    }
+};
+
+module.exports = {getUser, getUserId};
