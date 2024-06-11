@@ -32,10 +32,12 @@
 
 ## 12. Schema & Model for user
 
-## 13 crate seed route for testing
+## 13. crate seed route for testing
 
-## 14 GET /api/users -> isAdmin -> getAllUsers -> searchByName + pagination functionality
+## 14. GET /api/users -> isAdmin -> getAllUsers -> searchByName + pagination functionality
 
-## 15 responseHandler controller for error of success
+## 15. responseHandler controller for error of success
 
-## 16 GET /api/users/:id -> Find a single user by id
+## 16. GET /api/users/:id -> Find a single user by id
+
+## 17. create services in the backend
