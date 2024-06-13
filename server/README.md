@@ -50,4 +50,4 @@
 
 ## 21. POST /api/users/register-process -> process the registration
 
-## 22.
+## 22. create JWT -> create JSONWebToken to store value

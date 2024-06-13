@@ -9,4 +9,6 @@ const defaultUserImage =
     process.env.DEFAULT_USER_IMAGE ||
     'server/public/images/users/default_user.png';
 
-module.exports = {serverPort, mongodbURL, defaultUserImage};
+const JwtActivationKey = process.env.JWT_ACTIVATION_KEY || AGFHJFFDR;
+
+module.exports = {serverPort, mongodbURL, defaultUserImage, JwtActivationKey};

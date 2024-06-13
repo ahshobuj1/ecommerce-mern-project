@@ -3,6 +3,8 @@ const createError = require('http-errors');
 const {successResponse} = require('./responseController');
 const findItemById = require('../services/findItem');
 const deleteImage = require('../helper/deleteImage');
+const JSONWebToken = require('../helper/jsonwebtoken');
+const {JwtActivationKey} = require('../secret');
 const fs = require('fs').promises;
 
 const getUser = async (req, res, next) => {
@@ -91,13 +93,11 @@ const processRegister = async (req, res, next) => {
     try {
         const {name, email, password, phone, address} = req.body;
 
-        const newUser = {
-            name: name,
-            email,
-            password,
-            phone,
-            address,
-        };
+        const token = JSONWebToken(
+            {name, email, password, phone, address},
+            JwtActivationKey,
+            '30m'
+        );
 
         const userExists = await userModel.exists({email: email});
         if (userExists) {
@@ -106,7 +106,7 @@ const processRegister = async (req, res, next) => {
 
         return successResponse(res, {
             message: 'user was created successful',
-            payload: {newUser},
+            payload: {token},
         });
     } catch (error) {
         next(error);
