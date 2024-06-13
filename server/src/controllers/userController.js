@@ -87,4 +87,30 @@ const deleteUser = async (req, res, next) => {
     }
 };
 
-module.exports = {getUser, getUserId, deleteUser};
+const processRegister = async (req, res, next) => {
+    try {
+        const {name, email, password, phone, address} = req.body;
+
+        const newUser = {
+            name: name,
+            email,
+            password,
+            phone,
+            address,
+        };
+
+        const userExists = await userModel.exists({email: email});
+        if (userExists) {
+            throw createError(409, 'user with this email already exists');
+        }
+
+        return successResponse(res, {
+            message: 'user was created successful',
+            payload: {newUser},
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = {getUser, getUserId, deleteUser, processRegister};

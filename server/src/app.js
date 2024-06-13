@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 const createError = require('http-errors');
 const rateLimit = require('express-rate-limit');
 const userRouter = require('./routers/userRoutes');
@@ -18,8 +20,7 @@ app.use('/api/seed', seedRouter);
 app.use('/api/users', userRouter);
 app.use(rateLimiter);
 app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
 
 app.get('/test', rateLimiter, (req, res) => {
     res.status(200).send({

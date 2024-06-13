@@ -47,3 +47,7 @@
 ## 19. Refactoring & reusability , dynamic
 
 ## 20. create delete image helper
+
+## 21. POST /api/users/register-process -> process the registration
+
+## 22.
