@@ -2,12 +2,16 @@ const createError = require('http-errors');
 const mongoose = require('mongoose');
 const userModel = require('../models/userModel');
 
-const findItemById = async (id, options) => {
+const findItemById = async (model, id, options) => {
     try {
-        const item = await userModel.findById(id, options);
-        if (!item) throw createError(404, 'item does not match with this id');
+        const model = await userModel.findById(id, options);
+        if (!model)
+            throw createError(
+                404,
+                `${model.modelName} does not match with this id`
+            );
 
-        return item;
+        return model;
     } catch (error) {
         if (error instanceof mongoose.Error) {
             throw createError(400, 'Invalid user');

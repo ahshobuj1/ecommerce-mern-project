@@ -56,7 +56,7 @@ const getUserId = async (req, res, next) => {
     try {
         const id = req.params.id;
         const options = {password: 0};
-        const user = await findItemById(id, options);
+        const user = await findItemById(userModel, id, options);
 
         return successResponse(res, {
             payload: {
@@ -71,7 +71,7 @@ const getUserId = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
     try {
         const id = req.params.id;
-        const user = await findItemById(id);
+        const user = await findItemById(userModel, id);
 
         const userImagePath = user.image;
         fs.access(userImagePath, (err) => {
