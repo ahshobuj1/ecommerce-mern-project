@@ -41,3 +41,5 @@
 ## 16. GET /api/users/:id -> Find a single user by id
 
 ## 17. create services in the backend
+
+## 18. DELETE /api/users/:id -> delete a single user by ID
