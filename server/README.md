@@ -53,3 +53,5 @@
 ## 22. create JWT -> create JSONWebToken to store value
 
 ## 23. setup SMTP server app password & prepare email
+
+## 24. send email for verify with NODEMAILER package

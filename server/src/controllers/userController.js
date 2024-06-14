@@ -6,6 +6,7 @@ const deleteImage = require('../helper/deleteImage');
 const JSONWebToken = require('../helper/jsonwebtoken');
 const fs = require('fs').promises;
 const {JwtActivationKey, clientURL} = require('../secret');
+const sendEmailActivationURL = require('../helper/email');
 
 const getUser = async (req, res, next) => {
     try {
@@ -100,14 +101,21 @@ const processRegister = async (req, res, next) => {
         );
 
         //prepare email
-        const prepareEmailData = () => {
-            email: email;
-            subject: 'Account Activation Email';
+        const prepareEmailData = {
+            email: email,
+            subject: 'Account Activation Email',
             html: `
             <h2>Hello ${name} !<h2/>
-            <p>Please click here to <a href='${clientURL}/api/users/active/${token}'>active your account<a/><p/>
-            `;
+            <p>Please click here to <a href="${clientURL}/api/users/active/${token}" target="_blank">active your account<a/><p/>
+            `,
         };
+
+        try {
+            await sendEmailActivationURL(prepareEmailData);
+        } catch (error) {
+            next(createError(500, 'Failed to send verification email'));
+            return;
+        }
 
         const userExists = await userModel.exists({email: email});
         if (userExists) {
@@ -115,7 +123,7 @@ const processRegister = async (req, res, next) => {
         }
 
         return successResponse(res, {
-            message: 'user was created successful',
+            message: `please go to your email: ${email} for completing your verification`,
             payload: {token},
         });
     } catch (error) {
@@ -123,4 +131,9 @@ const processRegister = async (req, res, next) => {
     }
 };
 
-module.exports = {getUser, getUserId, deleteUser, processRegister};
+module.exports = {
+    getUser,
+    getUserId,
+    deleteUser,
+    processRegister,
+};
