@@ -51,3 +51,5 @@
 ## 21. POST /api/users/register-process -> process the registration
 
 ## 22. create JWT -> create JSONWebToken to store value
+
+## 23. setup SMTP server app password & prepare email

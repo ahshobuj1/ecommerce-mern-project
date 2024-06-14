@@ -10,5 +10,16 @@ const defaultUserImage =
     'server/public/images/users/default_user.png';
 
 const JwtActivationKey = process.env.JWT_ACTIVATION_KEY || AGFHJFFDR;
+const smtpUsername = process.env.SMTP_USERNAME;
+const smtpPassword = process.env.SMTP_PASSWORD;
+const clientURL = process.env.CLIENT_URL;
 
-module.exports = {serverPort, mongodbURL, defaultUserImage, JwtActivationKey};
+module.exports = {
+    serverPort,
+    mongodbURL,
+    defaultUserImage,
+    JwtActivationKey,
+    smtpUsername,
+    smtpPassword,
+    clientURL,
+};

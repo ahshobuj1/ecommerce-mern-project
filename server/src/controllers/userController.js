@@ -4,8 +4,8 @@ const {successResponse} = require('./responseController');
 const findItemById = require('../services/findItem');
 const deleteImage = require('../helper/deleteImage');
 const JSONWebToken = require('../helper/jsonwebtoken');
-const {JwtActivationKey} = require('../secret');
 const fs = require('fs').promises;
+const {JwtActivationKey, clientURL} = require('../secret');
 
 const getUser = async (req, res, next) => {
     try {
@@ -98,6 +98,16 @@ const processRegister = async (req, res, next) => {
             JwtActivationKey,
             '30m'
         );
+
+        //prepare email
+        const prepareEmailData = () => {
+            email: email;
+            subject: 'Account Activation Email';
+            html: `
+            <h2>Hello ${name} !<h2/>
+            <p>Please click here to <a href='${clientURL}/api/users/active/${token}'>active your account<a/><p/>
+            `;
+        };
 
         const userExists = await userModel.exists({email: email});
         if (userExists) {
