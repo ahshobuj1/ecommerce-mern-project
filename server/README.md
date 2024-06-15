@@ -57,3 +57,5 @@
 ## 24. send email for verify with NODEMAILER package
 
 ## 25. Verify email and store user in mongoDB database
+
+## 26. upload file/image with multer package
