@@ -55,3 +55,5 @@
 ## 23. setup SMTP server app password & prepare email
 
 ## 24. send email for verify with NODEMAILER package
+
+## 25. Verify email and store user in mongoDB database

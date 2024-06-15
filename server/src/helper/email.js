@@ -16,14 +16,14 @@ const sendEmailActivationURL = async (prepareEmailData) => {
         const mailOptions = {
             from: smtpUsername,
             to: prepareEmailData.email,
-            subject: 'Sending Email using Node.js',
+            subject: prepareEmailData.subject,
             html: prepareEmailData.html,
         };
 
         const info = await transporter.sendMail(mailOptions);
         console.log('Message sent: %s', info.response);
     } catch (error) {
-        console.error('Error occurred while sending email: ', error);
+        console.error('Error occured while sending email: ', error);
         throw error;
     }
 };
