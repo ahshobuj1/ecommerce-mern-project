@@ -13,7 +13,6 @@ const JwtActivationKey = process.env.JWT_ACTIVATION_KEY || AGFHJFFDR;
 const smtpUsername = process.env.SMTP_USERNAME || '';
 const smtpPassword = process.env.SMTP_PASSWORD || '';
 const clientURL = process.env.CLIENT_URL || '';
-const diskDIRECTORY = process.env.DISK_DIRECTORY || 'public/images/users';
 
 module.exports = {
     serverPort,
@@ -23,5 +22,4 @@ module.exports = {
     smtpUsername,
     smtpPassword,
     clientURL,
-    diskDIRECTORY,
 };
