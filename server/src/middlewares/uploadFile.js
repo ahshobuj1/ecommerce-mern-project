@@ -1,28 +1,18 @@
 const multer = require('multer');
-const path = require('path');
-const {
-    DISK_DIRECTORY,
-    ALLOWED_FILE_TYPES,
-    MAX_FILE_SIZE,
-} = require('../config');
+const {ALLOWED_FILE_TYPES, MAX_FILE_SIZE} = require('../config');
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, DISK_DIRECTORY);
-    },
-    filename: function (req, file, cb) {
-        const extname = path.extname(file.originalname);
-        cb(
-            null,
-            Date.now() + '-' + file.originalname.replace(extname, '') + extname
+const storage = multer.memoryStorage();
+
+const fileFilter = (req, file, cb) => {
+    if (!file.mimetype.startsWith('image/')) {
+        return cb(
+            new Error('only image files are allowed: jpg/jpeg/png'),
+            false
         );
-    },
-});
+    }
 
-const filterFile = (req, file, cb) => {
-    const extname = path.extname(file.originalname);
-    if (!ALLOWED_FILE_TYPES.includes(extname.substring(1))) {
-        return cb(new Error('Only allowed file type : jpg-jpeg-png'), false);
+    if (!ALLOWED_FILE_TYPES.includes(file.mimetype)) {
+        return cb(new Error('only allowed file type: jpg/jpeg/png'), false);
     }
     cb(null, true);
 };
@@ -30,8 +20,7 @@ const filterFile = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {fileSize: MAX_FILE_SIZE},
-    types: {fileType: ALLOWED_FILE_TYPES},
-    filterFile,
+    fileFilter: fileFilter,
 });
 
 module.exports = upload;

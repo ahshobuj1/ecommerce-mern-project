@@ -63,3 +63,5 @@
 ## 27. Filtering file
 
 ## 28. Input validator with -> express-validator package
+
+## 29. Storing images as buffer -> BUFFER data type

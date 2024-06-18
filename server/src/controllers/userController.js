@@ -95,8 +95,10 @@ const processRegister = async (req, res, next) => {
     try {
         const {name, email, password, phone, address} = req.body;
 
+        const imageBufferString = req.file.buffer.toString('base64');
+
         const token = JSONWebToken(
-            {name, email, password, phone, address},
+            {name, email, password, phone, address, image: imageBufferString},
             JwtActivationKey,
             '10m'
         );
