@@ -23,7 +23,7 @@ const sendEmailActivationURL = async (prepareEmailData) => {
         const info = await transporter.sendMail(mailOptions);
         console.log('Message sent: %s', info.response);
     } catch (error) {
-        console.error('Error occured while sending email: ', error);
+        console.error('Error occurred while sending email: ', error);
         throw error;
     }
 };

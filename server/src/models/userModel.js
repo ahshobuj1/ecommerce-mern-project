@@ -29,7 +29,7 @@ const userSchema = new Schema(
         password: {
             type: String,
             require: [true, 'missing password'],
-            minLength: [6, 'password must be at least 4 characters'],
+            minLength: [8, 'password must be at least 8 characters'],
             set: (v) => bcrypt.hashSync(v, bcrypt.genSaltSync(10)),
         },
         image: {
@@ -39,10 +39,12 @@ const userSchema = new Schema(
         address: {
             type: String,
             require: [true, 'address required'],
+            minLength: [2, 'address must be at least 2 characters'],
         },
         phone: {
             type: String,
             require: [true, 'phone required'],
+            minLength: [10, 'phone must be at least 2 characters'],
         },
         isAdmin: {
             type: Boolean,

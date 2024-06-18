@@ -61,3 +61,5 @@
 ## 26. upload file/image with multer package
 
 ## 27. Filtering file
+
+## 28. Input validator with -> express-validator package
