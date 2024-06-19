@@ -65,3 +65,5 @@
 ## 28. Input validator with -> express-validator package
 
 ## 29. Storing images as buffer -> BUFFER data type
+
+## 30. Update/PUT user data/value with Id

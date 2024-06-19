@@ -8,6 +8,7 @@ const fs = require('fs').promises;
 const {JwtActivationKey, clientURL} = require('../secret');
 const sendEmailActivationURL = require('../helper/email');
 const jwt = require('jsonwebtoken');
+const {create} = require('domain');
 
 const getUser = async (req, res, next) => {
     try {
@@ -95,6 +96,11 @@ const processRegister = async (req, res, next) => {
     try {
         const {name, email, password, phone, address} = req.body;
 
+        const image = req.file;
+        if (!image) {
+            throw createError(400, 'image file is required');
+        }
+
         const imageBufferString = req.file.buffer.toString('base64');
 
         const token = JSONWebToken(
@@ -170,10 +176,72 @@ const activateUserAccount = async (req, res, next) => {
     }
 };
 
+const updateUserById = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const updateOptions = {
+            new: true,
+            runValidators: true,
+            context: 'query',
+        };
+
+        let updates = {};
+        //name,email,phone,address,password,image
+
+        /*  if (req.body.name) {
+            updates.name = req.body.name;
+        }
+        if (req.body.password) {
+            updates.password = req.body.password;
+        }
+        if (req.body.phone) {
+            updates.phone = req.body.phone;
+        }
+        if (req.body.address) {
+            updates.address = req.body.address;
+        } */
+
+        for (let key in req.body) {
+            if (['name', 'password', 'phone', 'address'].includes(key)) {
+                updates[key] = req.body[key];
+            } else if (['email'].includes(key)) {
+                throw new Error('Email cannot be updated');
+            }
+        }
+
+        const image = req.file;
+        if (image) {
+            if (image.size > 2097152) {
+                throw createError(
+                    404,
+                    'image file too large. It must be less than 2MB'
+                );
+            }
+            updates.image = image.buffer.toString('base64');
+        }
+
+        const updatedUser = await userModel
+            .findByIdAndUpdate(userId, updates, updateOptions)
+            .select('-password');
+
+        if (!updatedUser) {
+            throw createError(404, 'user has not updated with this id');
+        }
+
+        return successResponse(res, {
+            message: 'user was updated successfully',
+            payload: updatedUser,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     getUser,
     getUserId,
     deleteUser,
     processRegister,
     activateUserAccount,
+    updateUserById,
 };
