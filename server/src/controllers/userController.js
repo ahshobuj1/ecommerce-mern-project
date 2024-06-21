@@ -84,6 +84,10 @@ const deleteUser = async (req, res, next) => {
 
         await userModel.findByIdAndDelete({_id: id, isAdmin: false});
 
+        if (user && user.image) {
+            await deleteImage(user.image);
+        }
+
         return successResponse(res, {
             message: 'user was deleted successful',
         });
@@ -101,13 +105,21 @@ const processRegister = async (req, res, next) => {
             throw createError(400, 'image file is required');
         }
 
-        const imageBufferString = req.file.buffer.toString('base64');
+        //*create jwt token
 
-        const token = JSONWebToken(
-            {name, email, password, phone, address, image: imageBufferString},
-            JwtActivationKey,
-            '10m'
-        );
+        const tokenPayload = {
+            name,
+            email,
+            password,
+            phone,
+            address,
+        };
+
+        if (image) {
+            tokenPayload.image = image;
+        }
+
+        const token = JSONWebToken(tokenPayload, JwtActivationKey, '10m');
 
         //prepare email
         const prepareEmailData = {
@@ -120,7 +132,7 @@ const processRegister = async (req, res, next) => {
         };
 
         try {
-            await sendEmailActivationURL(prepareEmailData);
+            //await sendEmailActivationURL(prepareEmailData);
         } catch (error) {
             next(createError(500, 'Failed to send verification email'));
             return;
@@ -179,6 +191,10 @@ const activateUserAccount = async (req, res, next) => {
 const updateUserById = async (req, res, next) => {
     try {
         const userId = req.params.id;
+        const options = {password: 0};
+
+        const user = await findItemById(user, userId, options);
+
         const updateOptions = {
             new: true,
             runValidators: true,
@@ -186,20 +202,6 @@ const updateUserById = async (req, res, next) => {
         };
 
         let updates = {};
-        //name,email,phone,address,password,image
-
-        /*  if (req.body.name) {
-            updates.name = req.body.name;
-        }
-        if (req.body.password) {
-            updates.password = req.body.password;
-        }
-        if (req.body.phone) {
-            updates.phone = req.body.phone;
-        }
-        if (req.body.address) {
-            updates.address = req.body.address;
-        } */
 
         for (let key in req.body) {
             if (['name', 'password', 'phone', 'address'].includes(key)) {
@@ -217,7 +219,8 @@ const updateUserById = async (req, res, next) => {
                     'image file too large. It must be less than 2MB'
                 );
             }
-            updates.image = image.buffer.toString('base64');
+            updates.image = image;
+            user.image !== 'default.png' && deleteImage(user.image);
         }
 
         const updatedUser = await userModel
