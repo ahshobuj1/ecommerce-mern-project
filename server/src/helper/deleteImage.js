@@ -1,4 +1,4 @@
-const fs = require('fs/promises').promises;
+const fs = require('fs/promises');
 
 const deleteImage = async (userImagePath) => {
     try {

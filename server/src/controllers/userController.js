@@ -88,6 +88,10 @@ const deleteUser = async (req, res, next) => {
             await deleteImage(user.image);
         }
 
+        if (user && user.image) {
+            await deleteImage(user.image);
+        }
+
         return successResponse(res, {
             message: 'user was deleted successful',
         });
@@ -100,7 +104,7 @@ const processRegister = async (req, res, next) => {
     try {
         const {name, email, password, phone, address} = req.body;
 
-        const image = req.file;
+        const image = req.file?.path;
         if (!image) {
             throw createError(400, 'image file is required');
         }
@@ -132,7 +136,7 @@ const processRegister = async (req, res, next) => {
         };
 
         try {
-            //await sendEmailActivationURL(prepareEmailData);
+            await sendEmailActivationURL(prepareEmailData);
         } catch (error) {
             next(createError(500, 'Failed to send verification email'));
             return;
@@ -193,7 +197,7 @@ const updateUserById = async (req, res, next) => {
         const userId = req.params.id;
         const options = {password: 0};
 
-        const user = await findItemById(user, userId, options);
+        const user = await findItemById(userModel, userId, options);
 
         const updateOptions = {
             new: true,
@@ -211,7 +215,7 @@ const updateUserById = async (req, res, next) => {
             }
         }
 
-        const image = req.file;
+        const image = req.file?.path;
         if (image) {
             if (image.size > 2097152) {
                 throw createError(
@@ -220,7 +224,7 @@ const updateUserById = async (req, res, next) => {
                 );
             }
             updates.image = image;
-            user.image !== 'default.png' && deleteImage(user.image);
+            user.image !== 'default_user.png' && deleteImage(user.image);
         }
 
         const updatedUser = await userModel
